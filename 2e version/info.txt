@@ -1,0 +1,6 @@
+Vous avez le droit d'utiliser une fonction qui s'appelle 'eval()'
+
+
+Si vous avez une erreur du type "not provide export default", vous mettez entre accolade Calculator lors de l'import
+
+import {Calculator} from "./calculator.js"
