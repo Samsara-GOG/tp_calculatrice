@@ -1,157 +1,233 @@
 'use strict';
 
-// this.querySelector acces a la 2e calculatrice pour accrocher les modifs
+export default class Calculator {
 
-const body = document.body;
-// const button = document.querySelector("button");
-let resultat = document.querySelector(".block__resultat");
+    constructor() {
 
+        // Génération de la calculatrice
+    
+        const calc = document.createElement("div");
+        calc.classList.add("calculator");
+        document.body.append(calc);
 
+        const screen = document.createElement("input");
+        screen.type = "text";
+        screen.value = "0";
+        screen.disabled = true;
+        screen.classList.add("calculator__screen");
+        calc.append(screen);
 
-const num = document.querySelector(".num")
+        const calc_keys = document.createElement("div");
+        calc_keys.classList.add("calculator__keys");
+        screen.after(calc_keys);
 
-// Signes d'opérateurs
-const addition = document.querySelector(".addition");
-const minus = document.querySelector(".minus");
-const virg = document.querySelector(".virg");
-const multiply = document.querySelector(".multiply");
-const egal = document.querySelector(".egal");
+        const btnOperator = (btnElement, btnType, btnValue, btnHTML, btnClass) => {
+            const btnNum = document.createElement(btnElement);
+            btnNum.type = btnType;
+            btnNum.value = btnValue;
+            btnNum.innerHTML = btnHTML;
+            btnNum.classList.add(btnClass);
+            calc_keys.append(btnNum);
+        }
 
-// Nombres
-const one = document.querySelector(".one");
-const two = document.querySelector(".two");
-const three = document.querySelector(".three");
-const four = document.querySelector(".four");
-const five = document.querySelector(".five");
-const six = document.querySelector(".six");
-const seven = document.querySelector(".seven");
-const eight = document.querySelector(".eight");
-const nine = document.querySelector(".nine");
-const zero = document.querySelector(".zero");
+        const btnNumber = (btnElement, btnType, btnValue, btnHTML) => {
+            const btnNum = document.createElement(btnElement);
+            btnNum.type = btnType;
+            btnNum.value = btnValue;
+            btnNum.innerHTML = btnHTML;
+            calc_keys.append(btnNum);
+        }
 
-function changeResultat(event) {
-    if button.classList.contains()
-    const nb = event.target.textContent;
-    console.log(nb);
-    resultat.textContent += addition.textContent;
+        btnOperator("button", "button", "+", "+", "operator");
+        btnOperator("button", "button", "-", "-", "operator");
+        btnOperator("button", "button", "*", "&times;", "operator");
+        btnOperator("button", "button", "/", "&divide;", "operator");   
+
+        btnNumber("button", "button", "7", "7");
+        btnNumber("button", "button", "8", "8");
+        btnNumber("button", "button", "9", "9");
+        btnNumber("button", "button", "4", "4");
+        btnNumber("button", "button", "5", "5");
+        btnNumber("button", "button", "6", "6");
+        btnNumber("button", "button", "1", "1");
+        btnNumber("button", "button", "2", "2");
+        btnNumber("button", "button", "3", "3");
+
+        btnNumber("button", "button", "0", "0");
+        btnOperator("button", "button", ".", ".", "decimal");
+        btnOperator("button", "button", "clear", "AC", "clear");
+
+        btnOperator("button", "button", "=", "=", "equal");
+
+        // Fonctionnalités des touches et des opérations
+
+        // Création de l'objet calculator pour initier les propriétés de l'écran affiché
+        const calculator = {
+            displayValue: "0",
+            firstOperand: null,
+            waitingForSecondOperand: false,
+            operator: null,
+        }
+        // Nombre à afficher ou pas en fonction de l'entrée
+        const inputDigit = (digit) => {
+            const { displayValue, waitingForSecondOperand } = calculator;
+
+            if (waitingForSecondOperand === true) {
+                calculator.displayValue = digit;
+                calculator.waitingForSecondOperand = false;
+            } else {
+                calculator.displayValue = displayValue === '0' ? digit : displayValue + digit;
+            }
+        }
+
+        // Gestion de la virgule
+        const inputDecimal = (dot) => {
+            // si on entre une virgule et que l'on est en attente du second opérande
+            if (calculator.waitingForSecondOperand === true) {
+                // on affiche la virgule après le 0
+                calculator.displayValue = '0.'
+                // et on attend plus le second opérand car il faut compléter
+                // les chiffres après la virgule
+                calculator.waitingForSecondOperand = false;
+                return
+            }
+
+            // Si la valeur affichée ne contient pas déjà une virgule
+            if (!calculator.displayValue.includes(dot)) {
+                // Ajoute la virgule flottante
+                calculator.displayValue += dot;
+            }
+        }
+
+        // 1er cas : l'utilisateur touche un opérateur
+        // après avoir entré le premier nombre
+        const handleOperator = (nextOperator) => {
+            // Destructure les propriétés de l'objet calculator
+            const { firstOperand, displayValue, operator } = calculator
+            // `parseFloat` convertit le contenu en chaîne de caractères 
+            // de `displayValue` en nombre à virgule flottante
+            const inputValue = parseFloat(displayValue);
+
+            // s'il existe déjà un opérateur et qu'un 1er opérand existe,
+            // en attente donc du second opérande
+            if (operator && calculator.waitingForSecondOperand)  {
+                // alors on remplace la valeur de la propriété opérator
+                // par le nouvel opérateur et on renvoie sans faire de calcul
+                calculator.operator = nextOperator;
+                return;
+            }
+          
+            // vérifie que `firstOperand` est nul (donc vide) et que `inputValue`
+            // est l'inverse d'une valeur `NaN`, donc est un nombre
+            if (firstOperand === null && !isNaN(inputValue)) {
+                // Met à jour la propriété `firstOperand` donc
+                // enregistre le nombre dans firstOperand
+                calculator.firstOperand = inputValue;
+            // sinon si c'est un opérateur
+            } else if (operator) {
+                // on calcule l'opération
+                const result = calculate(firstOperand, inputValue, operator);
+                // on converti le résultat en nombre à virgule flottante 
+                // à 7 chiffres max, et on arrondit avec parseFloat pour les zéros inutiles 
+                // après la virgule pour la valeur affichée pour éviter le bug 
+                // d'un calcul simple avec un résultat complexe ex 0.1 + 0.3 = 0.300...10^13
+                calculator.displayValue = `${parseFloat(result.toFixed(7))}`;
+                // et on l'enregistre dans firstOperand pour le prochain calcul
+                calculator.firstOperand = result;
+            }
+
+            // Le premier opérande est entré, le prochain nombre sera automatiquement
+            // considéré et enregistré comme le second opérande
+            calculator.waitingForSecondOperand = true;
+            // Enregistrement de l'opérateur cliqué dans la propriété operator
+            calculator.operator = nextOperator;
+        }
+
+        // 2e cas : l'utilisateur clique sur un opérateur
+        // après avoir entré le second opérande
+        const calculate = (firstOperand, secondOperand, operator) => {
+            if (operator === '+') {
+                return firstOperand + secondOperand;
+            } else if (operator === '-') {
+                return firstOperand - secondOperand;
+            } else if (operator === '*') {
+                return firstOperand * secondOperand;
+            } else if (operator === '/') {
+                return firstOperand / secondOperand;
+            }
+
+            // l'opérateur est forcément `=` alors on renvoie le second opérande
+            return secondOperand;
+        }
+
+        // Remise à zéro de toutes les propriétés de l'objet calculator
+        const resetCalculator = () => {
+            calculator.displayValue = '0';
+            calculator.firstOperand = null;
+            calculator.waitingForSecondOperand = false;
+            calculator.operator = null;
+          }
+
+        // Affchage sur l'écran de la calculatrice
+        // const updateDisplay = () => {
+        //     const display = document.querySelector(".calculator__screen");
+        //     display.value = calculator.displayValue;
+        // }
+
+        const updateDisplay = () => {
+            const display = document.querySelectorAll(".calculator__screen");
+            display.forEach( elem => { 
+                console.log(calculator.displayValue);
+                // console.log(elem); // elem = display
+                // console.log(elem.value);
+                // item = calculator.displayValue;
+                elem.value = calculator.displayValue;
+            });
+        }
+
+        updateDisplay();
+
+        const keys = document.querySelectorAll(".calculator__keys");
+        keys.forEach(item => { item.addEventListener("click", (event) => {
+
+            // const keys = document.querySelector(".calculator__keys");
+            // keys.addEventListener("click", (event) => {
+            // Donne accès à la touche cliquée
+            const { target } = event;
+            const { value } = target;
+
+            // console.log(value);
+
+            // Vérifie si l'élément cliqué est un bouton
+            // Sinon, la fonction s'arrête
+            if (!target.matches("button")) {
+                return;
+            }
+            
+            switch (value) {
+                case '+':
+                case '-':
+                case '*':
+                case '/':
+                case '=':
+                handleOperator(value);
+                break;
+                case '.':
+                inputDecimal(value);
+                break;
+                case "clear":
+                resetCalculator();
+                break;
+                default:
+                // Vérifie si la clé est un nombre entier
+                if (Number.isInteger(parseFloat(value))) {
+                    inputDigit(value);
+                }
+            }
+            
+            updateDisplay();
+        });
+        });
+
+    }
 }
-
-const button = document.querySelector("button");
-button.addEventListener("click", changeResultat);
-
-// export class Calculator {
-    //     constructor(nbLifes, pseudo, mana) {
-    //         this.mana = mana;
-    //     }
-    
-    //     spell() {
-    //         if(this.mana >= 10) {
-    //             console.log("Foudre");
-    //             this.mana-=10;
-    //         }
-    //         else {
-    //             console.log("A PU MANAAAA");
-    //         }
-    //     }
-// }
-
-// Génération de la calculatrice
-// const blockMain = document.createElement('div');
-// body.append(blockMain);
-// blockMain.classList.add('block');
-// blockMain.textContent = "Blabla";
-
-// function createButton(class, content) {
-//     const button = document.createElement("button");
-//     button.classList.add(class);
-//     button.textContent = content;
-//     blockMain.append()
-// }
-
-// createButton("btn")
-
-// function createLinkInNav(url, text) {
-//     const link = document.createElement("a");
-//     link.href = url;
-//     link.textContent = text;
-//     nav.append(link);
-// }
-
-// createLinkInNav("/","Accueil");
-// createLinkInNav("/services", "Mes services");
-// createLinkInNav("/contact", "Contact");
-
-
-// function changeResultat(event) {
-//     const nb = event.target.textContent;
-//     console.log(nb);
-//     resultat = button.textContent;
-// }
-
-// const button = document.querySelector("button");
-// button.addEventListener("click", changeResultat);
-
-
-// A voir
-// function changeImg(event) {
-//     const nb = event.target.textContent;
-//     console.log(nb);
-
-//     const img = document.querySelector('#imgPoney');
-    
-//     img.src = `img/img-${nb}.jpg`;
-//     //La même chose que 
-//     // img.src = "img/img-" + nb + ".jpg";
-// }
-
-// const buttons = document.querySelector("#buttons");
-// buttons.addEventListener("click", changeImg);
-
-
-// function calcul(event) {
-
-//     console.log(event.target);
-//     console.log(12)
-//     if (button.textContent == "AC" ) {
-//         resultat.document.textContent = 0;
-//     }
-
-//     // console.log(resultat.textContent);
-
-//     // console.log(eval('2 + 2'));
-//     // expected output: 4
-// }
-// // Au click du bouton, la fonction calcul se lance
-// button.addEventListener("click", calcul);
-
-
-
-// Exemple de Classe
-// class Menu {
-
-//     clickNav(event) {
-//         console.log(event.target)
-//     }
-
-//     constructor() {
-//         /* 1.Création de l'élément */
-//         const nav = document.createElement('nav');
-
-//         /* 2.Paramétrage de l'élément */
-//         nav.classList.add("menu");
-//         // C'est la même quand il n'y a pas de classe avant
-//         // nav.className = "menu";
-
-//         /* 3.Placement de l'élément dans le dom */
-//         document.body.append(nav);
-
-
-//         const link = document.createElement('a');
-//         link.textContent = "Accueil";
-//         nav.append(link);
-
-//         nav.addEventListener('click',this.clickNav);
-
-//     }
-// }
-
