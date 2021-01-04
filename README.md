@@ -1,5 +1,5 @@
 # TP calculatrice
-TP calculatrice JavaScript sur le DOM HTML
+TP calculatrice JavaScript sur le DOM
 
 Objectif: Reproduire en HTML/CSS/JavaScript cette calculatrice.  
 
