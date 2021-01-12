@@ -1,7 +1,7 @@
 # TP calculatrice
 TP calculatrice JavaScript sur le DOM
 
-Objectif: Reproduire en HTML/CSS/JavaScript cette calculatrice.  
+Objectif: Reproduire en HTML/CSS/JavaScript [cette calculatrice](https://github.com/Samsara-GOG/tp_calculatrice/blob/master/calculator.gif).
 
 Contenu du fichier app.js :  
   import Calculator from "./calculator.js";     
