@@ -4,9 +4,9 @@ TP calculatrice JavaScript sur le DOM
 Objectif: Reproduire en HTML/CSS/JavaScript [cette calculatrice](https://github.com/Samsara-GOG/tp_calculatrice/blob/master/calculator.gif).
 
 Contenu du fichier app.js :  
-  import Calculator from "./calculator.js";     
-  let calc1 = new Calculator();     
-  let calc2 = new Calculator();  
+  `import Calculator from "./calculator.js";      
+  let calc1 = new Calculator(); 
+  let calc2 = new Calculator();` 
 
 
 Consignes: 

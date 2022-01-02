@@ -1,11 +1,10 @@
 'use strict';
 
 export default class Calculator {
-  constructor(numID) {
+  constructor() {
     // Génération de la calculatrice
     const calc = document.createElement('div');
     calc.classList.add('calculator');
-    calc.setAttribute('id', `calc-id${numID}`);
     document.body.append(calc);
 
     const screen = document.createElement('input');
@@ -13,12 +12,10 @@ export default class Calculator {
     screen.value = '0';
     screen.disabled = true;
     screen.classList.add('calculator__screen');
-    screen.setAttribute('id', `screen-id${numID}`);
     calc.append(screen);
 
     const calc_keys = document.createElement('div');
     calc_keys.classList.add('calculator__keys');
-    calc_keys.setAttribute('id', `keys-id${numID}`);
     screen.after(calc_keys);
 
     const btnOperator = (btnElement, btnType, btnValue, btnHTML, btnClass) => {
@@ -109,6 +106,7 @@ export default class Calculator {
       // de `displayValue` en nombre à virgule flottante
       const inputValue = parseFloat(displayValue);
       calculator.displayValue = nextOperator;
+
       // s'il existe déjà un opérateur et qu'un 1er opérand existe,
       // en attente donc du second opérande
       if (operator && calculator.waitingForSecondOperand) {
@@ -134,7 +132,6 @@ export default class Calculator {
         // à 7 chiffres max, et on arrondit avec parseFloat pour les zéros inutiles
         // après la virgule pour la valeur affichée pour éviter le bug
         // d'un calcul simple avec un résultat complexe ex 0.1 + 0.3 = 0.300...10^13
-
         calculator.displayValue = `${parseFloat(result.toFixed(7))}`;
         // et on l'enregistre dans firstOperand pour le prochain calcul
         calculator.firstOperand = result;
@@ -160,7 +157,6 @@ export default class Calculator {
         return firstOperand / secondOperand;
       }
       calculator.displayValue = operator;
-
       // l'opérateur est forcément `=` alors on renvoie le second opérande
       return secondOperand;
     };
@@ -173,15 +169,23 @@ export default class Calculator {
       calculator.operator = null;
     };
 
-    const updateDisplay = (_id) => {
-      const display = document.getElementById(`screen-id${_id}`);
-      display.value = calculator.displayValue;
+    // Affchage sur l'écran de la calculatrice
+    // const updateDisplay = () => {
+    //     const display = document.querySelector(".calculator__screen");
+    //     display.value = calculator.displayValue;
+    // }
+
+    const updateDisplay = () => {
+      const display = document.querySelectorAll('.calculator__screen');
+      display.forEach((elem) => {
+        //console.log(calculator.displayValue);
+        elem.value = calculator.displayValue;
+      });
     };
 
-    updateDisplay(numID);
+    updateDisplay();
 
-    const keys = document.querySelectorAll(`#keys-id${numID}`);
-
+    const keys = document.querySelectorAll('.calculator__keys');
     keys.forEach((item) => {
       item.addEventListener('click', (event) => {
         const { target } = event;
@@ -216,7 +220,7 @@ export default class Calculator {
             }
         }
 
-        updateDisplay(numID);
+        updateDisplay();
       });
     });
   }
