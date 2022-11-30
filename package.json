@@ -1,0 +1,26 @@
+{
+	"name": "tp_calculatrice",
+	"version": "1.0.0",
+	"description": "TP calculatrice JavaScript sur le DOM",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "nodemon server.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Samsara-GOG/tp_calculatrice.git"
+	},
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/Samsara-GOG/tp_calculatrice/issues"
+	},
+	"homepage": "https://github.com/Samsara-GOG/tp_calculatrice#readme",
+	"dependencies": {
+		"express": "^4.18.2"
+	},
+	"devDependencies": {
+		"nodemon": "^2.0.20"
+	}
+}
