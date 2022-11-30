@@ -1,5 +1,5 @@
 # Projet calculator-js
-##Calculatrice JavaScript générée sur le DOM
+##Calculatrice JavaScript
 
 <p align="center">
     <img src="https://samsara.live/images/calculatrice/calculatrice.jpg" alt="calculatrice JavaScript" height="250">
@@ -31,7 +31,7 @@ Contenu du fichier app.js :
     - `calculator_all-linked.js` : fichier à utiliser dans app.js si on veut des calculatrices dépendantes les unes des autres    
 
 
-## Tester l'application
+## Tester l'application JavaScript
 
 Dans le dossier racine du projet, exécuter :
 1) `npm install` pour l'installation des dépendances,
