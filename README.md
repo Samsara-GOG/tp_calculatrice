@@ -1,19 +1,33 @@
 # TP calculatrice
-TP calculatrice JavaScript sur le DOM
+Calculatrice JavaScript générée sur le DOM
 
-Objectif: Reproduire en HTML/CSS/JavaScript [cette calculatrice](https://github.com/Samsara-GOG/tp_calculatrice/blob/master/calculator.gif).
+<p align="center">
+    <img src="https://samsara.live/images/calculatrice/calculatrice.jpg" alt="calculatrice JavaScript" height="250">
+</p>
+
+Version double et indépendantes les unes des autres
+<p align="center">
+    <img src="https://samsara.live/images/calculatrice/2calculatrices.jpg" alt="2 calculatrices JavaScript indépendantes" height="250">
+</p>
 
 Contenu du fichier app.js :  
-  `import Calculator from "./calculator.js";      
-  let calc1 = new Calculator(); 
-  let calc2 = new Calculator();` 
+```javascript
+  import Calculator from './calculator.js';
+  // import Calculator from './calculator_all-linked.js';
 
+  ('use strict');
+
+  let calc1 = new Calculator('1');
+  let calc2 = new Calculator('2');
+   ```
 
 Consignes: 
-  - Deux fichiers .js doivent être présents: app.js et calculator.js (https://javascript.info/modules)
-  - A l'exécution du code, 2 calculatrices fonctionnelles doivent apparaître dans le navigateur (https://javascript.info/modifying-document)
-  - Au lieu d'une fonction constructeur, utiliser une classe (https://javascript.info/class)
-  - Un seul addEventListener pour l'entiereté d'une calculatrice (https://javascript.info/bubbling-and-capturing)
-  - Seul l'HTML est généré par le JS, le CSS peut totalement être écrit dans un style.css
+  - Trois fichiers .js sont présents dans public: 
+  `app.js` : fichier qui importe et instancie les calculatrices,  
+  `calculator.js` : fichier à utiliser dans app.js si on veut deux calculatrices indépendantes    
+  `calculator_all-linked.js` : fichier à utiliser dans app.js si on veut deux calculatrices dépendantes l'une de l'autre    
+  - A l'exécution du code, 2 calculatrices fonctionnelles et indépendantes apparaissent dans le navigateur
+  - Un seul `addEventListener` est utilisé pour le code de la calculatrice
+  - L'HTML est généré par le JavaScript via le DOM, le CSS est à part dans son fichier `style.css`
 
 A rendre: Lien git du projet
