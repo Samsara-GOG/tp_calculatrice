@@ -1,4 +1,4 @@
-# TP calculatrice
+# Projet calculator-js
 Calculatrice JavaScript générée sur le DOM
 
 <p align="center">
